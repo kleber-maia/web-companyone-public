@@ -163,6 +163,19 @@ export default function Home() {
         <div className="import-section reveal"><div className="import-copy"><h3><BrandText value={copy.system.importTitle} /></h3><p><BrandText value={copy.system.importBody} /></p></div><div className="import-flow"><div className="import-sources">{copy.system.sources.map((name, i) => { const Icon = [Table, Database, Files][i]; return <span key={name}><Icon size={18} aria-hidden="true" /><BrandText value={name} /></span>; })}</div><ArrowRight className="import-arrow" size={29} aria-hidden="true" /><div className="import-end"><CompanyOneMark decorative compact /><small><BrandText value={copy.system.destination} /></small></div></div></div>
       </section>
 
+      <section className="team-section inverse" id="work" aria-labelledby="team-title"><div className="wrap">
+        <div className="team-intro"><div className="team-art scroll-art"><img src="/art/companyos-team.jpg" alt="Agent One + Dev One" width="1536" height="1024" loading="lazy" /></div><div className="team-heading reveal"><p className="eyebrow"><BrandText value={copy.team.kicker} /></p><h2 id="team-title"><BrandText value={copy.team.title} /></h2><p className="section-body">{copy.team.body}</p></div></div>
+        <div className="team-roles">{[false, true].map(dev => <article className="team-role reveal" key={String(dev)}><div className="role-title"><span className="agent-name">{dev ? "Dev One" : "Agent One"}</span><h3><BrandText value={dev ? copy.team.devRole : copy.team.agentRole} /></h3></div><p><BrandText value={dev ? copy.team.devBody : copy.team.agentBody} /></p><ul>{(dev ? copy.team.devTasks : copy.team.agentTasks).map(task => <li key={task}><Check size={15} aria-hidden="true" /><BrandText value={task} /></li>)}</ul></article>)}</div><p className="team-note reveal"><BrandText value={copy.team.note} /></p>
+        </div></section>
+        <section id="customization" className="customization-section wrap section-space" aria-labelledby="customization-title">
+          <div className="customization-intro reveal"><p className="eyebrow"><BrandText value={copy.customization.kicker} /></p><h2 id="customization-title"><BrandText value={copy.customization.title} /></h2><p className="section-body"><BrandText value={copy.customization.body} /></p><blockquote><BrandText value={copy.customization.request} /></blockquote></div>
+          <div className="customization-process"><ol>{copy.customization.steps.map(([title, body]) => <li className="reveal" key={title}><h3><BrandText value={title} /></h3><p>{body}</p></li>)}</ol><p className="control-note reveal"><Check size={22} aria-hidden="true" />{copy.customization.control}</p></div>
+        </section>
+
+      <section id="story" className="story-section wrap section-space" aria-labelledby="story-title"><div className="story-heading reveal"><h2 id="story-title"><BrandText value={copy.story.title} /></h2><p className="section-body">{copy.story.body}</p></div><div className="story-layout"><div className="story-request reveal"><blockquote><BrandText value={copy.story.request} /></blockquote><figure className="story-proof"><ProductDevices desktop="/product/calendar-desktop.png" alt={copy.system.alt[2]} /><figcaption>{copy.story.caption}</figcaption></figure></div><div className="story-steps reveal">{copy.story.steps.map(([title, body]) => <div key={title}><ArrowUpRight size={22} aria-hidden="true" /><div><h3><BrandText value={title} /></h3><p>{body}</p></div></div>)}</div></div></section>
+
+      <section className="closing inverse" id="beta" aria-labelledby="closing-title"><div className="wrap"><h2 id="closing-title">{copy.closing.title.map(line => <span key={line}><BrandText value={line} /></span>)}</h2><div className="closing-bottom"><p><BrandText value={copy.closing.body} /></p><span className="closing-os" aria-hidden="true">ONE</span></div></div></section>
+
       <section ref={faq} className="faq-section wrap section-space" id="faq" aria-labelledby="faq-title">
         <div className="faq-heading reveal">
           <div><p className="eyebrow">{copy.faq.kicker}</p><h2 id="faq-title"><BrandText value={copy.faq.title} /></h2></div>
@@ -179,19 +192,6 @@ export default function Home() {
           </details>)}
         </div>
       </section>
-
-      <section className="team-section inverse" id="work" aria-labelledby="team-title"><div className="wrap">
-        <div className="team-intro"><div className="team-art scroll-art"><img src="/art/companyos-team.jpg" alt="Agent One + Dev One" width="1536" height="1024" loading="lazy" /></div><div className="team-heading reveal"><p className="eyebrow"><BrandText value={copy.team.kicker} /></p><h2 id="team-title"><BrandText value={copy.team.title} /></h2><p className="section-body">{copy.team.body}</p></div></div>
-        <div className="team-roles">{[false, true].map(dev => <article className="team-role reveal" key={String(dev)}><div className="role-title"><span className="agent-name">{dev ? "Dev One" : "Agent One"}</span><h3><BrandText value={dev ? copy.team.devRole : copy.team.agentRole} /></h3></div><p><BrandText value={dev ? copy.team.devBody : copy.team.agentBody} /></p><ul>{(dev ? copy.team.devTasks : copy.team.agentTasks).map(task => <li key={task}><Check size={15} aria-hidden="true" /><BrandText value={task} /></li>)}</ul></article>)}</div><p className="team-note reveal"><BrandText value={copy.team.note} /></p>
-        </div></section>
-        <section id="customization" className="customization-section wrap section-space" aria-labelledby="customization-title">
-          <div className="customization-intro reveal"><p className="eyebrow"><BrandText value={copy.customization.kicker} /></p><h2 id="customization-title"><BrandText value={copy.customization.title} /></h2><p className="section-body"><BrandText value={copy.customization.body} /></p><blockquote><BrandText value={copy.customization.request} /></blockquote></div>
-          <div className="customization-process"><ol>{copy.customization.steps.map(([title, body]) => <li className="reveal" key={title}><h3><BrandText value={title} /></h3><p>{body}</p></li>)}</ol><p className="control-note reveal"><Check size={22} aria-hidden="true" />{copy.customization.control}</p></div>
-        </section>
-
-      <section id="story" className="story-section wrap section-space" aria-labelledby="story-title"><div className="story-heading reveal"><h2 id="story-title"><BrandText value={copy.story.title} /></h2><p className="section-body">{copy.story.body}</p></div><div className="story-layout"><div className="story-request reveal"><blockquote><BrandText value={copy.story.request} /></blockquote><figure className="story-proof"><ProductDevices desktop="/product/calendar-desktop.png" alt={copy.system.alt[2]} /><figcaption>{copy.story.caption}</figcaption></figure></div><div className="story-steps reveal">{copy.story.steps.map(([title, body]) => <div key={title}><ArrowUpRight size={22} aria-hidden="true" /><div><h3><BrandText value={title} /></h3><p>{body}</p></div></div>)}</div></div></section>
-
-      <section className="closing inverse" id="beta" aria-labelledby="closing-title"><div className="wrap"><h2 id="closing-title">{copy.closing.title.map(line => <span key={line}><BrandText value={line} /></span>)}</h2><div className="closing-bottom"><p><BrandText value={copy.closing.body} /></p><span className="closing-os" aria-hidden="true">ONE</span></div></div></section>
     </main>
     <footer className="site-footer wrap"><a className="brand" href="#top" aria-label="CompanyONE"><CompanyOneMark decorative compact /></a><p><BrandText value={copy.closing.note} /></p><a className="back-top" href="#top" aria-label={copy.closing.top}><ArrowUp size={22} /></a></footer>
   </div>;

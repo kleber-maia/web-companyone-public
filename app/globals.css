@@ -112,7 +112,6 @@ figcaption { color: var(--muted); font-size: 14px; line-height: 1.6; margin-top:
 .import-end { min-width: 150px; }
 .import-end > .companyone-mark { font-size: 23px; }
 .import-end small { display: block; font-size: 14px; margin-top: 8px; color: var(--muted); }
-.faq-section { padding-top: 18px; }
 .faq-heading { display: grid; grid-template-columns: 1.2fr .8fr; gap: 80px; align-items: end; }
 .faq-heading h2 { max-width: 780px; }
 .faq-heading .section-body { max-width: 460px; justify-self: end; font-size: 16px; }
@@ -278,7 +277,6 @@ figcaption { color: var(--muted); font-size: 14px; line-height: 1.6; margin-top:
   .import-end { min-width: 0; }
   .import-end > .companyone-mark { font-size: 18px; }
   .import-end small { font-size: 14px; max-width: 100px; line-height: 1.6; }
-  .faq-section { padding-top: 0; }
   .faq-heading { grid-template-columns: 1fr; gap: 22px; }
   .faq-heading .section-body { justify-self: start; }
   .faq-toolbar { justify-content: flex-start; margin-top: 34px; }

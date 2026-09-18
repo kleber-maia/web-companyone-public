@@ -29,15 +29,21 @@ test("FAQ provides fourteen localized native accordion items", () => {
   assert.match(page, /<summary>/);
   assert.match(page, /setFaqOpen\(true\)/);
   assert.match(page, /setFaqOpen\(false\)/);
+  const closingIndex = page.indexOf('<section className="closing inverse"');
+  const faqIndex = page.indexOf('<section ref={faq}');
+  const mainEndIndex = page.indexOf("</main>");
+  assert.ok(closingIndex !== -1 && closingIndex < faqIndex && faqIndex < mainEndIndex, "FAQ should be the final section after the closing CTA");
   for (const locale of ["en", "pt-BR", "es-419"]) {
     const faq = COPY[locale].faq;
     assert.equal(faq.items.length, 14, `${locale} should have fourteen FAQ items`);
     assert.equal(new Set(faq.items.map(([question]) => question)).size, 14, `${locale} FAQ questions should be unique`);
     assert.ok(faq.expandAll && faq.collapseAll && faq.label, `${locale} should localize FAQ controls and label`);
     for (const [question, direct, detail] of faq.items) assert.ok(question && direct && detail, `${locale} FAQ entries should contain all three copy levels`);
+    const brandMentions = (faq.items.flat().join(" ").match(/CompanyONE/g) || []).length;
+    assert.equal(brandMentions, 2, `${locale} FAQ should establish CompanyONE in the first item without repeating it mechanically`);
   }
   const javascript = builtJavascript();
-  for (const text of ["What features does CompanyONE include?", "Quais recursos o CompanyONE oferece?", "¿Qué funciones incluye CompanyONE?", "Expand all", "Abrir todas", "Cerrar todas", "No. Agent One and Dev One are your operations and engineering team."]) assert.ok(javascript.includes(text), `missing built FAQ copy: ${text}`);
+  for (const text of ["What features are included?", "Quais recursos estão incluídos?", "¿Qué funciones incluye?", "Expand all", "Abrir todas", "Cerrar todas", "No. Agent One and Dev One are your operations and engineering team."]) assert.ok(javascript.includes(text), `missing built FAQ copy: ${text}`);
 });
 test("public page uses the CompanyONE identity without obsolete sales paths", () => {
   const content = ["app/i18n.ts", "app/page.tsx", "index.html", "README.md"].map(file => readFileSync(file, "utf8")).join("\n");
