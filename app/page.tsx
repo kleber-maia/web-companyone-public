@@ -121,7 +121,7 @@ export default function Home() {
       <a className="brand" href="#top" aria-label="CompanyONE"><CompanyOneMark decorative compact /></a>
       <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="main-nav" onClick={() => setMenuOpen(!menuOpen)}>{copy.menu}<CaretDown size={16} aria-hidden="true" /></button>
       <nav id="main-nav" data-open={menuOpen} aria-label={locale === "en" ? "Main navigation" : locale === "pt-BR" ? "Navegação principal" : "Navegación principal"}>
-        {copy.nav.map((label, index) => <a key={index} href={["#why", "#ownership", "#system", "#faq", "#work", "#customization", "#story"][index]} onClick={() => setMenuOpen(false)}>{label}</a>)}
+        {copy.nav.map((label, index) => <a key={index} href={["#why", "#ownership", "#system", "#work", "#customization", "#story", "#faq"][index]} onClick={() => setMenuOpen(false)}>{label}</a>)}
       </nav>
       <label className="language"><span className="sr-only">{copy.language}</span><select aria-label={copy.language} value={locale} onChange={event => setLocale(event.target.value as Locale)}><option value="en">EN</option><option value="pt-BR">PT</option><option value="es-419">ES</option></select><CaretDown size={13} aria-hidden="true" /></label>
     </header>

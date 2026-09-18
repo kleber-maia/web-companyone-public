@@ -25,6 +25,7 @@ test("all three languages include the three-part product story", () => {
 test("FAQ provides fourteen localized native accordion items", () => {
   const page = readFileSync("app/page.tsx", "utf8");
   assert.match(page, /id="faq"/);
+  assert.match(page, /\["#why", "#ownership", "#system", "#work", "#customization", "#story", "#faq"\]/);
   assert.match(page, /<details className="faq-item"/);
   assert.match(page, /<summary>/);
   assert.match(page, /setFaqOpen\(true\)/);
@@ -35,6 +36,7 @@ test("FAQ provides fourteen localized native accordion items", () => {
   assert.ok(closingIndex !== -1 && closingIndex < faqIndex && faqIndex < mainEndIndex, "FAQ should be the final section after the closing CTA");
   for (const locale of ["en", "pt-BR", "es-419"]) {
     const faq = COPY[locale].faq;
+    assert.equal(COPY[locale].nav.at(-1), locale === "en" ? "FAQ" : locale === "pt-BR" ? "Perguntas" : "Preguntas", `${locale} FAQ link should be last in navigation`);
     assert.equal(faq.items.length, 14, `${locale} should have fourteen FAQ items`);
     assert.equal(new Set(faq.items.map(([question]) => question)).size, 14, `${locale} FAQ questions should be unique`);
     assert.ok(faq.expandAll && faq.collapseAll && faq.label, `${locale} should localize FAQ controls and label`);
