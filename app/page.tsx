@@ -63,6 +63,7 @@ export default function Home() {
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [modulesPaused, setModulesPaused] = useState(false);
+  const faq = useRef<HTMLElement>(null);
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setMenuOpen(false); };
     window.addEventListener("keydown", closeOnEscape);
@@ -113,13 +114,14 @@ export default function Home() {
     document.addEventListener("visibilitychange", visibility);
     return () => { observer.disconnect(); artObserver.disconnect(); document.removeEventListener("visibilitychange", visibility); };
   }, []);
+  const setFaqOpen = (open: boolean) => faq.current?.querySelectorAll("details").forEach(item => { item.open = open; });
   return <div ref={page} className="site" id="top" data-paused={paused}>
     <a className="skip-link" href="#content">{copy.skip}</a>
     <header className="site-header wrap">
       <a className="brand" href="#top" aria-label="CompanyONE"><CompanyOneMark decorative compact /></a>
       <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="main-nav" onClick={() => setMenuOpen(!menuOpen)}>{copy.menu}<CaretDown size={16} aria-hidden="true" /></button>
       <nav id="main-nav" data-open={menuOpen} aria-label={locale === "en" ? "Main navigation" : locale === "pt-BR" ? "Navegação principal" : "Navegación principal"}>
-        {copy.nav.map((label, index) => <a key={index} href={["#why", "#ownership", "#system", "#work", "#customization", "#story"][index]} onClick={() => setMenuOpen(false)}>{label}</a>)}
+        {copy.nav.map((label, index) => <a key={index} href={["#why", "#ownership", "#system", "#faq", "#work", "#customization", "#story"][index]} onClick={() => setMenuOpen(false)}>{label}</a>)}
       </nav>
       <label className="language"><span className="sr-only">{copy.language}</span><select aria-label={copy.language} value={locale} onChange={event => setLocale(event.target.value as Locale)}><option value="en">EN</option><option value="pt-BR">PT</option><option value="es-419">ES</option></select><CaretDown size={13} aria-hidden="true" /></label>
     </header>
@@ -159,6 +161,23 @@ export default function Home() {
           <div className="module-marquee"><div className="module-track">{[0, 1].map(group => <div className="module-track-group" key={group} aria-hidden={group === 1 ? true : undefined}>{copy.modules.items.map(([name, detail], index) => <article className="module-slide" key={name}><span className="module-slide-number">0{index + 1}</span><h3><BrandText value={name} /></h3><p><BrandText value={detail} /></p></article>)}</div>)}</div></div>
         </div>
         <div className="import-section reveal"><div className="import-copy"><h3><BrandText value={copy.system.importTitle} /></h3><p><BrandText value={copy.system.importBody} /></p></div><div className="import-flow"><div className="import-sources">{copy.system.sources.map((name, i) => { const Icon = [Table, Database, Files][i]; return <span key={name}><Icon size={18} aria-hidden="true" /><BrandText value={name} /></span>; })}</div><ArrowRight className="import-arrow" size={29} aria-hidden="true" /><div className="import-end"><CompanyOneMark decorative compact /><small><BrandText value={copy.system.destination} /></small></div></div></div>
+      </section>
+
+      <section ref={faq} className="faq-section wrap section-space" id="faq" aria-labelledby="faq-title">
+        <div className="faq-heading reveal">
+          <div><p className="eyebrow">{copy.faq.kicker}</p><h2 id="faq-title"><BrandText value={copy.faq.title} /></h2></div>
+          <p className="section-body">{copy.faq.intro}</p>
+        </div>
+        <div className="faq-toolbar" role="group" aria-label={copy.faq.label}>
+          <button type="button" onClick={() => setFaqOpen(true)}>{copy.faq.expandAll}</button>
+          <button type="button" onClick={() => setFaqOpen(false)}>{copy.faq.collapseAll}</button>
+        </div>
+        <div className="faq-list" aria-label={copy.faq.label}>
+          {copy.faq.items.map(([question, direct, detail], index) => <details className="faq-item" key={question}>
+            <summary><span className="faq-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><span className="faq-question"><BrandText value={question} /></span><Plus className="faq-icon" size={22} aria-hidden="true" /></summary>
+            <div className="faq-answer"><p className="faq-direct"><BrandText value={direct} /></p><p><BrandText value={detail} /></p></div>
+          </details>)}
+        </div>
       </section>
 
       <section className="team-section inverse" id="work" aria-labelledby="team-title"><div className="wrap">
