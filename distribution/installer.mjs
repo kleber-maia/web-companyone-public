@@ -15,53 +15,54 @@ import {
 import os from "node:os";
 import path from "node:path";
 
-const feedUrl = process.env.OPERA_OS_UPDATE_FEED_URL || "https://operaos.ai/distribution/releases/latest.json";
+const feedUrl = process.env.COMPANYONE_UPDATE_FEED_URL || "https://companyone.ai/distribution/releases/latest.json";
 const trustedReleaseAssetPrefixes = [
+  "/kleber-maia/web-companyone-public/releases/download/",
   "/kleber-maia/web-opera-os-public/releases/download/",
   "/kleber-maia/web-company-os-public/releases/download/",
 ];
-const serviceRoot = path.resolve(process.env.OPERA_OS_SERVICE_ROOT || path.join(os.homedir(), "Services", "opera-os"));
-const appUrl = required("OPERA_OS_APP_URL");
-const databaseUrl = required("OPERA_OS_DATABASE_URL");
-const adminEmail = required("OPERA_OS_ADMIN_EMAIL");
-const adminPassword = required("OPERA_OS_ADMIN_PASSWORD");
-const adminName = process.env.OPERA_OS_ADMIN_NAME || "Admin";
+const serviceRoot = path.resolve(process.env.COMPANYONE_SERVICE_ROOT || path.join(os.homedir(), "Services", "companyone"));
+const appUrl = required("COMPANYONE_APP_URL");
+const databaseUrl = required("COMPANYONE_DATABASE_URL");
+const adminEmail = required("COMPANYONE_ADMIN_EMAIL");
+const adminPassword = required("COMPANYONE_ADMIN_PASSWORD");
+const adminName = process.env.COMPANYONE_ADMIN_NAME || "Admin";
 const releasesRoot = path.join(serviceRoot, "releases");
 const sharedRoot = path.join(serviceRoot, "shared");
 const updateRoot = path.join(sharedRoot, "updates");
 const currentLink = path.join(serviceRoot, "current");
 
-if (process.platform !== "darwin") throw new Error("The current OperaOS beta installer supports macOS only.");
-if (!["http:", "https:"].includes(new URL(appUrl).protocol)) throw new Error("OPERA_OS_APP_URL must use HTTP or HTTPS.");
-if (!/^postgres(?:ql)?:/.test(new URL(databaseUrl).protocol)) throw new Error("OPERA_OS_DATABASE_URL must be a PostgreSQL URL.");
-if (!adminEmail.includes("@")) throw new Error("OPERA_OS_ADMIN_EMAIL must be an email address.");
-if (adminPassword.length < 12) throw new Error("OPERA_OS_ADMIN_PASSWORD must contain at least 12 characters.");
-if (existsSync(currentLink)) throw new Error("OperaOS is already installed. Use Settings → Updates instead.");
+if (process.platform !== "darwin") throw new Error("The current CompanyONE beta installer supports macOS only.");
+if (!["http:", "https:"].includes(new URL(appUrl).protocol)) throw new Error("COMPANYONE_APP_URL must use HTTP or HTTPS.");
+if (!/^postgres(?:ql)?:/.test(new URL(databaseUrl).protocol)) throw new Error("COMPANYONE_DATABASE_URL must be a PostgreSQL URL.");
+if (!adminEmail.includes("@")) throw new Error("COMPANYONE_ADMIN_EMAIL must be an email address.");
+if (adminPassword.length < 12) throw new Error("COMPANYONE_ADMIN_PASSWORD must contain at least 12 characters.");
+if (existsSync(currentLink)) throw new Error("CompanyONE is already installed. Use Settings → Updates instead.");
 for (const command of ["node", "tar", "psql", "pg_dump", "launchctl", "curl"]) requireCommand(command);
 
-const temporaryRoot = mkdtempSync(path.join(os.tmpdir(), "operaos-install-"));
+const temporaryRoot = mkdtempSync(path.join(os.tmpdir(), "companyone-install-"));
 let releaseDirectory;
 
 try {
-  console.log("Reading the signed OperaOS release channel…");
+  console.log("Reading the signed CompanyONE release channel…");
   const manifestText = await requestText(feedUrl);
   const signatureText = await requestText(`${feedUrl}.sig`);
   const publicKeyUrl = new URL("../release-signing-public.pem", feedUrl).href;
   const publicKey = await requestText(publicKeyUrl);
   if (!verify(null, Buffer.from(manifestText), publicKey, Buffer.from(signatureText.trim(), "base64"))) {
-    throw new Error("The OperaOS release signature is invalid.");
+    throw new Error("The CompanyONE release signature is invalid.");
   }
   const manifest = validateManifest(JSON.parse(manifestText));
   if (manifest.platform !== process.platform || manifest.architecture !== process.arch) {
     throw new Error(`This package supports ${manifest.platform} ${manifest.architecture}, not this Mac.`);
   }
 
-  console.log(`Downloading OperaOS ${manifest.version}…`);
-  const archive = path.join(temporaryRoot, "operaos.tar.gz");
+  console.log(`Downloading CompanyONE ${manifest.version}…`);
+  const archive = path.join(temporaryRoot, "companyone.tar.gz");
   await download(manifest.package.url, archive);
   assertPackage(archive, manifest.package);
   execFileSync("tar", ["-xzf", archive, "-C", temporaryRoot]);
-  const extracted = path.join(temporaryRoot, "OperaOS");
+  const extracted = path.join(temporaryRoot, "CompanyONE");
   validateRuntime(extracted, manifest);
 
   mkdirSync(releasesRoot, { recursive: true });
@@ -77,10 +78,10 @@ try {
   writeFileSync(path.join(updateRoot, "release-signing-public.pem"), publicKey, { mode: 0o600 });
 
   const runtimeEnv = { ...process.env, ...parseEnvironment(path.join(releaseDirectory, ".env.production")) };
-  console.log("Preparing the fresh OperaOS database…");
+  console.log("Preparing the fresh CompanyONE database…");
   const database = psqlConnectionString(databaseUrl);
   const tableCount = execFileSync("psql", [database, "--no-psqlrc", "--tuples-only", "--no-align", "--command", "select count(*) from pg_tables where schemaname = 'public'"], { encoding: "utf8" }).trim();
-  if (tableCount !== "0") throw new Error("The target database is not empty. OperaOS beta installs require a fresh database.");
+  if (tableCount !== "0") throw new Error("The target database is not empty. CompanyONE beta installs require a fresh database.");
   execFileSync("node", [".next/standalone/node_modules/prisma/build/index.js", "migrate", "deploy", "--schema", "prisma/schema.prisma"], {
     cwd: releaseDirectory,
     env: runtimeEnv,
@@ -99,10 +100,10 @@ try {
 
   activateRelease(releaseDirectory);
   installLaunchAgent();
-  console.log("Starting OperaOS…");
+  console.log("Starting CompanyONE…");
   restartService();
   await waitForHealth();
-  console.log(`OperaOS ${manifest.version} is installed and healthy at ${appUrl}.`);
+  console.log(`CompanyONE ${manifest.version} is installed and healthy at ${appUrl}.`);
 } catch (error) {
   if (!existsSync(currentLink) && releaseDirectory) rmSync(releaseDirectory, { recursive: true, force: true });
   throw error;
@@ -114,7 +115,7 @@ function productionEnvironment() {
   const secure = new URL(appUrl).protocol === "https:";
   const values = {
     DATABASE_URL: databaseUrl,
-    AUTH_SECRET: process.env.OPERA_OS_AUTH_SECRET || randomBytes(48).toString("hex"),
+    AUTH_SECRET: process.env.COMPANYONE_AUTH_SECRET || randomBytes(48).toString("hex"),
     APP_URL: appUrl,
     SESSION_COOKIE_SECURE: secure ? "true" : "false",
     BACKUP_DIR: path.join(sharedRoot, "backups"),
@@ -122,20 +123,24 @@ function productionEnvironment() {
     BACKUP_RETENTION_DAYS: "14",
     BACKUP_AUTO_AFTER_OPERATION: "true",
     BACKUP_AUTO_DELAY_MS: "2000",
-    BACKUP_TIME_ZONE: process.env.OPERA_OS_TIME_ZONE || Intl.DateTimeFormat().resolvedOptions().timeZone,
-    OPERA_OS_SERVICE_ROOT: serviceRoot,
-    OPERA_OS_UPDATE_FEED_URL: feedUrl,
+    BACKUP_TIME_ZONE: process.env.COMPANYONE_TIME_ZONE || Intl.DateTimeFormat().resolvedOptions().timeZone,
+    COMPANYONE_SERVICE_ROOT: serviceRoot,
+    COMPANYONE_HERMES_HOME: path.join(os.homedir(), ".hermes"),
+    COMPANYONE_STATE_DIR: path.join(sharedRoot, "hermes-state"),
+    COMPANYONE_HERMES_AUTO_SETUP: "true",
+    COMPANYONE_HERMES_MULTIPLEX_PROFILES: "true",
+    COMPANYONE_UPDATE_FEED_URL: feedUrl,
   };
   return `${Object.entries(values).map(([key, value]) => `${key}=${JSON.stringify(value)}`).join("\n")}\n`;
 }
 
 function installLaunchAgent() {
-  const launchAgent = path.join(os.homedir(), "Library", "LaunchAgents", "com.opera-os.production.plist");
+  const launchAgent = path.join(os.homedir(), "Library", "LaunchAgents", "com.companyone.production.plist");
   mkdirSync(path.dirname(launchAgent), { recursive: true });
   writeFileSync(launchAgent, `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
-  <key>Label</key><string>com.opera-os.production</string>
+  <key>Label</key><string>com.companyone.production</string>
   <key>ProgramArguments</key><array><string>${xml(path.join(currentLink, "start-production.sh"))}</string></array>
   <key>RunAtLoad</key><true/><key>KeepAlive</key><true/>
   <key>StandardOutPath</key><string>${xml(path.join(sharedRoot, "logs", "production.out.log"))}</string>
@@ -153,7 +158,7 @@ function activateRelease(release) {
 }
 
 function restartService() {
-  execFileSync("launchctl", ["kickstart", "-k", `gui/${process.getuid()}/com.opera-os.production`], { stdio: "inherit" });
+  execFileSync("launchctl", ["kickstart", "-k", `gui/${process.getuid()}/com.companyone.production`], { stdio: "inherit" });
 }
 
 async function waitForHealth() {
@@ -169,11 +174,11 @@ async function waitForHealth() {
     }
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
-  throw new Error(`OperaOS did not become healthy: ${lastError}`);
+  throw new Error(`CompanyONE did not become healthy: ${lastError}`);
 }
 
 function validateManifest(value) {
-  if (!value || value.schemaVersion !== 1 || value.product !== "OperaOS" || value.channel !== "beta") throw new Error("The release manifest is not supported.");
+  if (!value || value.schemaVersion !== 1 || value.product !== "CompanyONE" || value.channel !== "beta") throw new Error("The release manifest is not supported.");
   if (!/^[A-Za-z0-9._-]+$/.test(value.version)) throw new Error("The release version is invalid.");
   const packageUrl = new URL(value.package?.url);
   const releaseFeed = new URL(feedUrl);
@@ -208,7 +213,7 @@ async function requestText(url) {
 
 async function download(url, file) {
   const response = await fetch(url, { redirect: "follow" });
-  if (!response.ok) throw new Error(`Could not download the OperaOS package: HTTP ${response.status}`);
+  if (!response.ok) throw new Error(`Could not download the CompanyONE package: HTTP ${response.status}`);
   writeFileSync(file, Buffer.from(await response.arrayBuffer()));
 }
 
@@ -223,7 +228,7 @@ function parseEnvironment(file) {
 
 function required(name) {
   const value = process.env[name]?.trim();
-  if (!value) throw new Error(`${name} is required. Read https://operaos.ai/distribution/agent.txt before installing.`);
+  if (!value) throw new Error(`${name} is required. Read https://companyone.ai/distribution/agent.txt before installing.`);
   return value;
 }
 
@@ -237,7 +242,7 @@ function requireCommand(command) {
   try {
     execFileSync("/usr/bin/which", [command], { stdio: "ignore" });
   } catch {
-    throw new Error(`${command} is required before installing OperaOS.`);
+    throw new Error(`${command} is required before installing CompanyONE.`);
   }
 }
 
