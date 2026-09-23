@@ -1,6 +1,6 @@
-# CompanyONE website
+# HeyManager website
 
-The public website for CompanyONE: a private, adaptable ERP and CRM for small businesses with Agent One for business work and Dev One for extending the system. It is a pure client-side React site compiled by Vite into static HTML, CSS, and JavaScript for GitHub Pages.
+The public website for HeyManager: a private, adaptable ERP and CRM for small businesses with Agent One for business work and Dev One for extending the system. It is a pure client-side React site compiled by Vite into static HTML, CSS, and JavaScript for GitHub Pages.
 
 ## Repository workflow
 
@@ -61,10 +61,10 @@ The two tunnels run as persistent macOS user services. Their configurations are 
 
 ## Copy conventions
 
-- CompanyONE is a company-owned information system for small-business owners.
+- HeyManager is a company-owned information system for small-business owners.
 - The three parts are company-controlled infrastructure, a customizable information system, and AI agents on the team.
 - Agent One handles business tasks. Dev One helps customize, extend, and maintain the system.
-- CompanyONE runs on company hardware, on premises or with a company-selected cloud provider. Backups are automatic. This is a hosting claim, not a claim that all model processing happens locally.
+- HeyManager runs on company hardware, on premises or with a company-selected cloud provider. Backups are automatic. This is a hosting claim, not a claim that all model processing happens locally.
 - Existing data can be imported. ERP and CRM modules are starting points, not fixed product boundaries.
 - This page is an informational pamphlet. It intentionally has no sales, contact, or waitlist calls to action.
 - Keep English, Brazilian Portuguese, Latin American Spanish, and default metadata aligned.

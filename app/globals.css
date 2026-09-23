@@ -22,10 +22,10 @@ img { display: block; }
 .section-space { padding-block: 110px; }
 .site-header { display: flex; height: 86px; align-items: center; gap: 30px; position: relative; z-index: 2; }
 .brand { font-size: 27px; display: inline-flex; white-space: nowrap; }
-.companyone-mark { display: inline-block; white-space: nowrap; font-family: var(--display); font-weight: 400; letter-spacing: -.02em; line-height: 1; }
-.companyone-mark .companyone-company { font-weight: 400; -webkit-text-stroke: .18px currentColor; }
-.companyone-mark .companyone-one { font-family: 'Oswald Variable', Arial, sans-serif; font-size: 1.12em; font-weight: 300; letter-spacing: -.04em; opacity: .82; -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; }
-.companyone-mark-compact .companyone-one { opacity: 1; -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; }
+.heymanager-mark { display: inline-block; white-space: nowrap; font-family: var(--display); font-weight: 400; letter-spacing: -.02em; line-height: 1; }
+.heymanager-mark .heymanager-hey { font-weight: 400; -webkit-text-stroke: .18px currentColor; }
+.heymanager-mark .heymanager-manager { font-family: 'Oswald Variable', Arial, sans-serif; font-size: 1.12em; font-weight: 300; letter-spacing: -.04em; opacity: .82; -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; }
+.heymanager-mark-compact .heymanager-manager { opacity: 1; -webkit-text-fill-color: currentColor; -webkit-text-stroke: 0; }
 .site-header nav { display: flex; gap: 38px; margin-left: auto; }
 .site-header nav a { font-size: 14px; letter-spacing: -.2px; }
 .site-header nav a:hover { color: var(--accent-text); }
@@ -110,7 +110,7 @@ figcaption { color: var(--muted); font-size: 14px; line-height: 1.6; margin-top:
 .import-sources svg { color: var(--accent-text); flex-shrink: 0; }
 .import-arrow { color: var(--accent-text); flex-shrink: 0; }
 .import-end { min-width: 150px; }
-.import-end > .companyone-mark { font-size: 23px; }
+.import-end > .heymanager-mark { font-size: 23px; }
 .import-end small { display: block; font-size: 14px; margin-top: 8px; color: var(--muted); }
 .faq-heading { display: grid; grid-template-columns: 1.2fr .8fr; gap: 80px; align-items: end; }
 .faq-heading h2 { max-width: 780px; }
@@ -215,7 +215,7 @@ figcaption { color: var(--muted); font-size: 14px; line-height: 1.6; margin-top:
   .import-section { gap: 35px; }
   .import-flow { gap: 14px; }
   .import-end { min-width: 100px; }
-  .import-end > .companyone-mark { font-size: 19px; }
+  .import-end > .heymanager-mark { font-size: 19px; }
   .faq-heading { gap: 45px; }
   .faq-heading .section-body { font-size: 15px; }
   .team-intro { grid-template-columns: 1fr 1fr; gap: 25px; }
@@ -275,7 +275,7 @@ figcaption { color: var(--muted); font-size: 14px; line-height: 1.6; margin-top:
   .import-sources span { font-size: 14px; gap: 8px; }
   .import-arrow { width: 24px; }
   .import-end { min-width: 0; }
-  .import-end > .companyone-mark { font-size: 18px; }
+  .import-end > .heymanager-mark { font-size: 18px; }
   .import-end small { font-size: 14px; max-width: 100px; line-height: 1.6; }
   .faq-heading { grid-template-columns: 1fr; gap: 22px; }
   .faq-heading .section-body { justify-self: start; }
